@@ -1,0 +1,48 @@
+{
+  "name": "@sowasit/client-js",
+  "version": "0.1.0",
+  "description": "Official SoWasIt JavaScript/TypeScript client library for blockchain operations",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
+  "browser": "./dist/umd/sowasit.umd.js",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/index.d.ts",
+      "browser": "./dist/umd/sowasit.umd.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "build:watch": "node build.js --watch",
+    "dev": "npm run build:watch",
+    "type-check": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "blockchain",
+    "sowasit",
+    "client",
+    "api",
+    "typescript",
+    "javascript"
+  ],
+  "author": "SoWasIt Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3",
+    "esbuild": "^0.20.0",
+    "rimraf": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

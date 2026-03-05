@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoWasIt Blockchain Client - Vanilla JS Example</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      color: #667eea;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: #999;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+
+    button.primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    button.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    button.secondary {
+      background: #f5f5f5;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+
+    button.secondary:hover {
+      background: #eee;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .output {
+      background: #f9f9f9;
+      border-left: 4px solid #667eea;
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #333;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .output.error {
+      border-left-color: #e74c3c;
+      background: #ffe6e6;
+    }
+
+    .output.success {
+      border-left-color: #27ae60;
+      background: #e6ffe6;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .status.disconnected {
+      background: #f5f5f5;
+      color: #999;
+    }
+
+    .status.connected {
+      background: #e6ffe6;
+      color: #27ae60;
+    }
+
+    .status.loading {
+      background: #fff3cd;
+      color: #f39c12;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⛓️  SoWasIt Blockchain Client</h1>
+    <p class="subtitle">Interactive blockchain demo in the browser</p>
+
+    <div id="status" class="status disconnected">● Disconnected</div>
+
+    <div class="form-group">
+      <label for="apiUrl">API URL:</label>
+      <input
+        type="text"
+        id="apiUrl"
+        placeholder="http://localhost:3001"
+        value="http://localhost:3001"
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="apiKey">API Key (optional):</label>
+      <input
+        type="text"
+        id="apiKey"
+        placeholder="your_api_key_here"
+      >
+    </div>
+
+    <div class="button-group">
+      <button class="primary" onclick="connectToApi()">🔌 Connect to API</button>
+      <button class="secondary" onclick="clearOutput()">🗑️  Clear</button>
+    </div>
+
+    <div class="button-group">
+      <button class="secondary" onclick="createChain()">🔐 1. Create Chain</button>
+      <button class="secondary" onclick="addBlock()">📝 2. Add Block</button>
+      <button class="secondary" onclick="getChainData()">🔎 3. Get Chain</button>
+      <button class="secondary" onclick="getBlockData()">📦 4. Get Block</button>
+    </div>
+
+    <div class="form-group">
+      <label for="blockData">Block data (JSON):</label>
+      <input
+        type="text"
+        id="blockData"
+        placeholder='{"message": "hello", "value": 123}'
+      >
+    </div>
+
+    <div id="output" class="output">Ready. Click "Connect to API" to start.</div>
+  </div>
+
+  <script src="../dist/umd/sowasit.umd.js"></script>
+  <script>
+    let client = null;
+    let currentChainId = null;
+    let currentBlockId = null;
+
+    function log(message, isError = false) {
+      const output = document.getElementById('output');
+      const timestamp = new Date().toLocaleTimeString();
+      const prefix = isError ? '❌' : '✅';
+      output.textContent += `[${timestamp}] ${prefix} ${message}\n`;
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function clearOutput() {
+      document.getElementById('output').textContent = '';
+    }
+
+    function updateStatus(connected) {
+      const status = document.getElementById('status');
+      if (connected) {
+        status.textContent = '● Connected';
+        status.className = 'status connected';
+      } else {
+        status.textContent = '● Disconnected';
+        status.className = 'status disconnected';
+      }
+    }
+
+    async function connectToApi() {
+      try {
+        const apiUrl = document.getElementById('apiUrl').value;
+        const apiKey = document.getElementById('apiKey').value;
+
+        if (!apiUrl) {
+          log('Please enter an API URL', true);
+          return;
+        }
+
+        client = new window.SoWasIt.SowasitClient({
+          baseUrl: apiUrl,
+          apiKey: apiKey || undefined,
+        });
+
+        log('Connecting to API...');
+        await client.health();
+        log('✨ Connected! Ready to use.');
+        updateStatus(true);
+      } catch (error) {
+        log(`Connection failed: ${error.message}`, true);
+        updateStatus(false);
+      }
+    }
+
+    async function createChain() {
+      if (!client) {
+        log('Please connect to API first', true);
+        return;
+      }
+
+      try {
+        log('🔐 Creating a new blockchain chain...');
+        currentChainId = 'demo-chain-' + Date.now();
+        const chain = await client.chains.create(currentChainId, 'Demo Chain', {
+          description: 'Created from browser demo',
+          visibility: 'public',
+          type: 'data',
+        });
+        log(`Chain created: ${chain.id}`);
+        log(`Ready for next steps!`);
+      } catch (error) {
+        log(`Failed to create chain: ${error.message}`, true);
+      }
+    }
+
+    async function addBlock() {
+      if (!client || !currentChainId) {
+        log('Please create a chain first', true);
+        return;
+      }
+
+      try {
+        log('📝 Adding a block to the chain...');
+        const blockDataInput = document.getElementById('blockData').value || '{}';
+        let blockData = {};
+        try {
+          blockData = JSON.parse(blockDataInput);
+        } catch (e) {
+          blockData = { message: blockDataInput };
+        }
+
+        const block = await client.blocks.create(currentChainId, {
+          timestamp: new Date().toISOString(),
+          ...blockData,
+        });
+
+        currentBlockId = block.id;
+        log(`Block added: ${block.id.substring(0, 8)}...`);
+        log(`Ready to retrieve!`);
+      } catch (error) {
+        log(`Failed to add block: ${error.message}`, true);
+      }
+    }
+
+    async function getChainData() {
+      if (!client || !currentChainId) {
+        log('Please create a chain first', true);
+        return;
+      }
+
+      try {
+        log(`🔎 Retrieving chain data...`);
+        const chain = await client.chains.get(currentChainId);
+        log(`Chain: ${chain.name}`);
+        log(`Type: ${chain.type}`);
+        log(`Visibility: ${chain.visibility}`);
+        log(`Created: ${chain.created_at}`);
+      } catch (error) {
+        log(`Failed to get chain: ${error.message}`, true);
+      }
+    }
+
+    async function getBlockData() {
+      if (!client || !currentChainId || !currentBlockId) {
+        log('Please create and add a block first', true);
+        return;
+      }
+
+      try {
+        log(`📦 Retrieving block...`);
+        const block = await client.blocks.get(currentChainId, currentBlockId);
+        log(`Block ID: ${block.id}`);
+        log(`Hash: ${block.hash.substring(0, 16)}...`);
+        log(`Data: ${JSON.stringify(block.data)}`);
+        log(`Created: ${block.created_at}`);
+      } catch (error) {
+        log(`Failed to get block: ${error.message}`, true);
+      }
+    }
+
+    log('⏳ Initializing SoWasIt Client...');
+  </script>
+</body>
+</html>
