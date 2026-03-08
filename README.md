@@ -74,7 +74,7 @@ You'll pass the chain ID when recording blocks, so you can use different chains 
 Create a file named `.env.local` in your project folder:
 
 ```
-SOWASIT_API_URL=https://api.sowasit.io
+SOWASIT_API_URL=https://api.sowasit.io/v1
 SOWASIT_API_KEY=live_xxxxx
 ```
 
@@ -202,7 +202,7 @@ npm install @sowasit/client-js
 In your project root, create `.env.local`:
 
 ```
-REACT_APP_SOWASIT_API_URL=http://localhost:3001
+REACT_APP_SOWASIT_API_URL=http://localhost:3001/v1
 REACT_APP_SOWASIT_API_KEY=your_api_key_here
 ```
 
@@ -410,7 +410,7 @@ The simplest way to add blockchain to your web page:
 
   <script>
     // Initialize the blockchain client
-    const API_URL = 'https://api.sowasit.io';
+    const API_URL = 'https://api.sowasit.io/v1';
     const API_KEY = 'live_xxxxx';  // Your API key from dashboard
 
     const client = new window.SoWasIt.SowasitClient({
@@ -572,7 +572,7 @@ recordSensorReading('iot-sensors', {
 
 ```javascript
 const client = new SowasitClient({
-  baseUrl: 'http://localhost:3001',
+  baseUrl: 'http://localhost:3001/v1',
   apiKey: 'your_api_key_here',
 });
 ```
@@ -588,7 +588,7 @@ const client = new SowasitClient({
 
 ```javascript
 const client = new SowasitClient({
-  baseUrl: 'http://localhost:3001',
+  baseUrl: 'http://localhost:3001/v1',
 });
 
 // Log in
@@ -700,7 +700,7 @@ await client.register(email, password, firstName, lastName, tenantName);
 **Problem:** Can't connect to the API
 
 **Solutions:**
-1. Check your API URL is correct (usually `http://localhost:3001`)
+1. Check your API URL is correct (usually `http://localhost:3001/v1`)
 2. Make sure the API server is running
 3. Check that there's no firewall blocking the connection
 
