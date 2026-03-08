@@ -5,7 +5,7 @@ Official JavaScript/TypeScript client for integrating SoWasIt blockchain into yo
 **Perfect for:** Recording user actions, transaction logs, audit trails, IoT sensor data, or any immutable event tracking.
 
 **Website:** [sowasit.io](https://sowasit.io)  
-**Dashboard:** [app.sowasit.io](https://app.sowasit.io)
+**Dashboard:** [sowasit.io](https://sowasit.io)
 
 ---
 
@@ -53,7 +53,7 @@ That's it! The library is now installed.
 ### Step 3: Get Your API Key & Choose Your Chain
 
 **Create an API key:**
-1. Go to [https://app.sowasit.io](https://app.sowasit.io)
+1. Go to [https://sowasit.io](https://sowasit.io)
 2. Create an account and log in
 3. In your dashboard, click **"API Keys"**
 4. Click **"Create New API Key"**
@@ -75,7 +75,7 @@ Create a file named `.env.local` in your project folder:
 
 ```
 SOWASIT_API_URL=https://api.sowasit.io
-SOWASIT_API_KEY=sk_live_xxxxx
+SOWASIT_API_KEY=live_xxxxx
 ```
 
 That's all you need in `.env`. You'll pass the chain ID in your code.
@@ -411,7 +411,7 @@ The simplest way to add blockchain to your web page:
   <script>
     // Initialize the blockchain client
     const API_URL = 'https://api.sowasit.io';
-    const API_KEY = 'sk_live_xxxxx';  // Your API key from dashboard
+    const API_KEY = 'live_xxxxx';  // Your API key from dashboard
 
     const client = new window.SoWasIt.SowasitClient({
       baseUrl: API_URL,
@@ -689,7 +689,7 @@ await client.register(email, password, firstName, lastName, tenantName);
 - Use your chain IDs: `'my-app-events'`, `'transactions'`, `'audit-logs'`, etc.
 - Perfect for: Production apps, sensitive data, enterprise deployments
 
-**To upgrade:** Visit [https://app.sowasit.io](https://app.sowasit.io) → Billing
+**To upgrade:** Visit [https://sowasit.io](https://sowasit.io) → Billing
 
 ---
 
