@@ -42,8 +42,8 @@ export class SowasitClient {
   }
 
   private async request<T>(
-    method: string,
     path: string,
+    method: string,
     data?: Record<string, any>,
     useApiKey = false
   ): Promise<T> {

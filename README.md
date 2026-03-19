@@ -788,7 +788,7 @@ MIT License - See [LICENSE](LICENSE) file for details
 
 ## 💬 Support
 
-- **Docs:** [docs.sowasit.io](https://docs.sowasit.io)
+- **Docs:** [sowasit.io/documentation](https://sowasit.io/documentation)
 - **Discord:** [discord.gg/sowasit](https://discord.gg/sowasit)
 - **Issues:** [GitHub Issues](https://github.com/sowasit/client-js/issues)
 
